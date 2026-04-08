@@ -1,24 +1,25 @@
 # WSL-optimized Docker Compose for OpenClaw
 # Usage:
 #   1. Copy .env.wsl.example to .env and fill in values
-#   2. docker compose -f docker-compose.wsl.yml up -d
-#   3. docker compose -f docker-compose.wsl.yml exec cli openclaw --help
+#   2. docker compose -f docker-compose.wsl.yml up -d gateway
+#   3. docker compose -f docker-compose.wsl.yml exec gateway node dist/index.js <cmd>
 #
-# Gateway runs directly (no systemd needed).
+# Runs as root to avoid /mnt/c permission issues.
 # Data persists in ~/.bao on the WSL host.
 
 services:
   gateway:
     image: ghcr.io/baoduong/openclaw:latest
+    user: root
     environment:
-      HOME: /home/node
+      HOME: /root
       TERM: xterm-256color
       OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:-}
       OPENCLAW_ALLOW_INSECURE_PRIVATE_WS: ${OPENCLAW_ALLOW_INSECURE_PRIVATE_WS:-}
       TZ: ${OPENCLAW_TZ:-Asia/Ho_Chi_Minh}
     volumes:
-      - ${OPENCLAW_DATA_DIR:-~/.bao}:/home/node/.openclaw
-      - ${OPENCLAW_WORKSPACE_DIR:-/mnt/c/Users/baodt10/projects/hal_repos}:/home/node/.openclaw/workspace
+      - ${OPENCLAW_DATA_DIR:-~/.bao}:/root/.openclaw
+      - ${OPENCLAW_WORKSPACE_DIR:-/mnt/c/Users/baodt10/projects/hal_repos}:/root/.openclaw/workspace
     ports:
       - "${OPENCLAW_GATEWAY_PORT:-18789}:18789"
       - "${OPENCLAW_BRIDGE_PORT:-18790}:18790"
@@ -49,17 +50,18 @@ services:
 
   cli:
     image: ghcr.io/baoduong/openclaw:latest
+    user: root
     network_mode: "service:gateway"
     environment:
-      HOME: /home/node
+      HOME: /root
       TERM: xterm-256color
       OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:-}
       OPENCLAW_ALLOW_INSECURE_PRIVATE_WS: ${OPENCLAW_ALLOW_INSECURE_PRIVATE_WS:-}
       BROWSER: echo
       TZ: ${OPENCLAW_TZ:-Asia/Ho_Chi_Minh}
     volumes:
-      - ${OPENCLAW_DATA_DIR:-~/.bao}:/home/node/.openclaw
-      - ${OPENCLAW_WORKSPACE_DIR:-/mnt/c/Users/baodt10/projects/hal_repos}:/home/node/.openclaw/workspace
+      - ${OPENCLAW_DATA_DIR:-~/.bao}:/root/.openclaw
+      - ${OPENCLAW_WORKSPACE_DIR:-/mnt/c/Users/baodt10/projects/hal_repos}:/root/.openclaw/workspace
     stdin_open: true
     tty: true
     init: true
