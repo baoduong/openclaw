@@ -811,7 +811,6 @@ export async function runEmbeddedAttempt(
         userTime,
         userTimeFormat,
         contextFiles,
-        includeMemorySection: !params.contextEngine || params.contextEngine.info.id === "legacy",
         memoryCitationsMode: params.config?.memory?.citations,
         promptContribution,
       });

@@ -15,7 +15,6 @@ describe("buildAgentSystemPrompt memory guidance", () => {
     });
     const promptWithoutMemory = buildAgentSystemPrompt({
       workspaceDir: "/tmp/openclaw",
-      includeMemorySection: false,
     });
 
     expect(promptWithMemory).toContain("## Memory Recall");

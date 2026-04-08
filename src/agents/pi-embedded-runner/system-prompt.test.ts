@@ -112,7 +112,6 @@ describe("buildEmbeddedSystemPrompt", () => {
       tools: [],
       modelAliasLines: [],
       userTimezone: "UTC",
-      includeMemorySection: false,
     });
 
     expect(prompt).not.toContain("## Memory Recall");
