@@ -18,6 +18,7 @@ services:
       TZ: ${OPENCLAW_TZ:-Asia/Ho_Chi_Minh}
     volumes:
       - ${OPENCLAW_DATA_DIR:-~/.bao}:/home/node/.openclaw
+      - ${OPENCLAW_WORKSPACE_DIR:-/mnt/c/Users/baodt10/projects/hal_repos}:/home/node/.openclaw/workspace
     ports:
       - "${OPENCLAW_GATEWAY_PORT:-18789}:18789"
       - "${OPENCLAW_BRIDGE_PORT:-18790}:18790"
@@ -58,6 +59,7 @@ services:
       TZ: ${OPENCLAW_TZ:-Asia/Ho_Chi_Minh}
     volumes:
       - ${OPENCLAW_DATA_DIR:-~/.bao}:/home/node/.openclaw
+      - ${OPENCLAW_WORKSPACE_DIR:-/mnt/c/Users/baodt10/projects/hal_repos}:/home/node/.openclaw/workspace
     stdin_open: true
     tty: true
     init: true
