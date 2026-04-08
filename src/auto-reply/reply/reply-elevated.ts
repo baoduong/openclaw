@@ -46,7 +46,7 @@ function resolveAllowFromFormatter(params: {
       accountId: params.accountId,
       allowFrom: values,
     })
-      .map((entry) => normalizeOptionalString(entry) ?? "")
+      .map((entry) => String(entry).trim())
       .filter(Boolean);
 }
 
@@ -77,32 +77,27 @@ function isApprovedElevatedSender(params: {
   const senderIdTokens = new Set<string>();
   const senderFromTokens = new Set<string>();
   const senderE164Tokens = new Set<string>();
-  const senderId = normalizeOptionalString(params.ctx.SenderId);
-  const senderFrom = normalizeOptionalString(params.ctx.From);
-  const senderE164 = normalizeOptionalString(params.ctx.SenderE164);
 
-  if (senderId) {
+  if (normalizeOptionalString(params.ctx.SenderId)) {
     addFormattedTokens({
       formatAllowFrom: params.formatAllowFrom,
-      values: [senderId, stripSenderPrefix(senderId)].filter((value): value is string =>
-        Boolean(value),
+      values: [params.ctx.SenderId, stripSenderPrefix(params.ctx.SenderId)].filter(
+        (v): v is string => !!v,
       ),
       tokens: senderIdTokens,
     });
   }
-  if (senderFrom) {
+  if (normalizeOptionalString(params.ctx.From)) {
     addFormattedTokens({
       formatAllowFrom: params.formatAllowFrom,
-      values: [senderFrom, stripSenderPrefix(senderFrom)].filter((value): value is string =>
-        Boolean(value),
-      ),
+      values: [params.ctx.From, stripSenderPrefix(params.ctx.From)].filter((v): v is string => !!v),
       tokens: senderFromTokens,
     });
   }
-  if (senderE164) {
+  if (normalizeOptionalString(params.ctx.SenderE164)) {
     addFormattedTokens({
       formatAllowFrom: params.formatAllowFrom,
-      values: [senderE164],
+      values: [params.ctx.SenderE164].filter((v): v is string => !!v),
       tokens: senderE164Tokens,
     });
   }
